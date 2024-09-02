@@ -33,12 +33,41 @@ void recur_delete(rbtree *t, node_t *node){
 
 node_t *rbtree_insert(rbtree *t, const key_t key) {
   // TODO: implement insert
-  node_t *new_node = (node_t *)calloc(1,sizeof(rbtree));
-  new_node -> key = key;
-  new_node -> color = RBTREE_RED;
-  new_node -> left = t->nil;
-  new_node -> right = t->nil;
+  node_t *new_node = (node_t *)calloc(1,sizeof(node_t));
+  new_node->key = key;
+  new_node->color = RBTREE_RED;
+  node_t *x = t->root;
+  node_t *y = t->nil;
+  while (x != t->nil)
+  {
+    y = x;
+    if (key < x->key)
+    {
+      x = x->left;
+    }else{
+      x = x->right;
+    }
+  }
+  new_node->parent = y;
+  if (y == t->nil){
+    t->root = new_node;
+  }
+  else if (key < y->key)
+  {
+    y->left = new_node;
+  }
+  else{
+    y->right = new_node;
+  }
+  new_node->left = t->nil;
+  new_node->right = t->nil;
+  // 여기까지는 BST 삽입
+  rbtree_insert_fixup(t, new_node);
   return t->root;
+}
+
+void rbtree_insert_fixup(rbtree *t, node_t *z){
+  
 }
 
 node_t *rbtree_find(const rbtree *t, const key_t key) {
@@ -51,6 +80,9 @@ node_t *rbtree_find(const rbtree *t, const key_t key) {
     }else{
       node = node->right;
     }
+  }
+  if (node == t->nil){
+    return NULL;
   }
   return node;
 }
