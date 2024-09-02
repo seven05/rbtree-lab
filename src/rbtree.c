@@ -3,18 +3,41 @@
 #include <stdlib.h>
 
 rbtree *new_rbtree(void) {
-  rbtree *p = (rbtree *)calloc(1, sizeof(rbtree));
+  rbtree *t = (rbtree *)calloc(1, sizeof(rbtree));
   // TODO: initialize struct if needed
-  return p;
+  node_t * nil = (node_t *)calloc(1,sizeof(rbtree));
+  nil -> color = RBTREE_BLACK;
+  t->root = t->nil = nil;
+  return t;
 }
 
 void delete_rbtree(rbtree *t) {
   // TODO: reclaim the tree nodes's memory
+  node_t *node = t->root;
+  if (node != t->nil){
+    recur_delete(t, node);
+  }
+  free(t -> nil);
   free(t);
+}
+
+void recur_delete(rbtree *t, node_t *node){
+  if(node -> left != t->nil){
+    recur_delete(t,node->left);
+  }
+  if(node -> right != t->nil){
+    recur_delete(t,node->right);
+  }
+  free(node);
 }
 
 node_t *rbtree_insert(rbtree *t, const key_t key) {
   // TODO: implement insert
+  node_t *new_node = (node_t *)calloc(1,sizeof(rbtree));
+  new_node -> key = key;
+  new_node -> color = RBTREE_RED;
+  new_node -> left = t->nil;
+  new_node -> right = t->nil;
   return t->root;
 }
 
